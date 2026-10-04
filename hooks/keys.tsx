@@ -13,15 +13,17 @@ type Surface = {
 export default function RunnerKeys(_props: unknown, s: Surface) {
   if (s.state === undefined) {
     s.onKey(event => {
-      const k = event.key
-      if (k === ' ' || k === 'up' || k === 'w') s.post({ action: 'jump' })
-      else if (k === 'down' || k === 's') s.post({ action: 'duck' })
-      else if (k === 'return' || k === 'r') s.post({ action: 'start' })
+      // Chrome's keys: Space or Up jumps, Down ducks, Enter restarts after a crash.
+      // Space can arrive as the character or by name.
+      const k = event.key.toLowerCase()
+      if (k === ' ' || k === 'space' || k === 'up') s.post({ action: 'jump' })
+      else if (k === 'down') s.post({ action: 'duck' })
+      else if (k === 'return' || k === 'enter') s.post({ action: 'restart' })
     })
     s.setState(true)
   }
   return s.elements.Text({
-    children: 'Click here, then: Space or Up = jump, Down = duck, Enter = start. Esc gives the keys back.',
+    children: 'Click here, then: Space or Up = jump, Down = duck, Enter = restart. Esc gives the keys back.',
     dimColor: true,
   })
 }

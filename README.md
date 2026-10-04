@@ -54,11 +54,13 @@ The game appears above the prompt box and starts running.
 **With the keyboard:** first click the gray line under the buttons
 ("Click here, then: ..."). The game now has the keys:
 
+The keys are the same as Chrome's offline dino game:
+
 | Key | Does |
 | --- | --- |
-| Space, Up, W | Jump. Also starts a new game after game over. |
-| Down, S | Duck |
-| Enter, R | Start or restart |
+| Space or Up | Jump. Also starts a game, and starts a new one after game over. |
+| Down | Duck. In the air, drops you faster. |
+| Enter | Start a new game after game over |
 | Esc | Give the keys back to the prompt box, so you can type to Claude again |
 
 Avoid cacti and birds. The game speeds up over time, birds show up after

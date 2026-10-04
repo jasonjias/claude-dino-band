@@ -120,10 +120,12 @@ const scene = (g: Game) => {
 
 const act = (action: string) => (g0: Game): Game => {
   const g = norm(g0)
-  if (action === 'start' || (action === 'jump' && (!g.isRunning || g.isOver))) {
+  // As in Chrome: Space/Up starts an idle or crashed game, Enter only restarts a crashed one
+  const isStopped = !g.isRunning || g.isOver
+  if (action === 'start' || (action === 'jump' && isStopped) || (action === 'restart' && g.isOver)) {
     return { ...start, isOn: true, best: g.best, isRunning: true }
   }
-  if (!g.isRunning || g.isOver) return g
+  if (isStopped) return g
   if (action === 'jump' && g.y === 0) return { ...g, vy: CONFIG.jumpVelocity, duck: 0 }
   if (action === 'duck') return { ...g, duck: CONFIG.duckTicks, vy: g.y > 0 ? Math.min(g.vy, -8) : g.vy }
   return g
