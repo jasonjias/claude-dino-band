@@ -137,18 +137,25 @@ export const register: Register = on => {
         return g.isOn && g.isRunning && !g.isOver ? step(g) : g0
       }),
     )
-    await $.command.register({ name: 'runner', description: 'Show or hide the runner game above the prompt', argumentHint: '[on|off]' })
+    await $.command.register({ name: 'runner', description: 'Start, stop, show, or hide the dino game', argumentHint: '[start|stop|on|off]' })
     return next(e)
   })
 
   on('command.run', { command: 'runner' }, async ($, e) => {
     const arg = e.args.trim().toLowerCase()
+    if (!['', 'start', 'stop', 'on', 'off'].includes(arg)) {
+      return { text: 'Use /runner start, /runner stop, /runner on, or /runner off.' }
+    }
     await update($, game, g0 => {
       const g = norm(g0)
+      if (arg === 'start') return act('start')(g)
+      if (arg === 'stop') return { ...start, isOn: g.isOn, best: g.best }
       return { ...g, isOn: arg === 'on' ? true : arg === 'off' ? false : !g.isOn }
     })
     const g = norm(await read($, game))
-    return { text: g.isOn ? 'Runner on. Run /band off for a clean band.' : 'Runner off.' }
+    return { text: arg === 'start' ? 'Game started. Click the keyboard instruction line for keyboard controls.'
+      : arg === 'stop' ? 'Game stopped. Run /runner start to play again.'
+      : g.isOn ? 'Runner shown. Run /runner start to play.' : 'Runner hidden and paused. Run /runner on to show it again.' }
   })
 
   // Keys arrive from the Client in keys.tsx

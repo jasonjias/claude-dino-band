@@ -15,40 +15,47 @@ The game needs the desktop surface. A terminal session cannot display it.
 
 ## Install
 
-In a compatible Claude Code environment:
+In Claude Code, run these two commands **one at a time**:
 
 ```text
 /plugin marketplace add jasonjias/claude-dino-band
+```
+
+```text
 /plugin install runner-band@claude-dino-band
 ```
 
-Reload or restart the Claude session after installation. These are standard
-marketplace installation steps; installation and band rendering on a fresh
-machine have not yet been verified.
+Restart the Claude session, then run `/runner start` in a compatible Claude
+desktop session. No Python, Pillow, or sprite generation is needed to play.
+The plugin is named `runner-band`; its marketplace is `claude-dino-band`.
 
-For local development:
+If you prefer installing from a terminal:
 
 ```sh
-git clone https://github.com/jasonjias/claude-dino-band.git
-claude plugin validate ./claude-dino-band
-claude --plugin-dir ./claude-dino-band
+claude plugin marketplace add jasonjias/claude-dino-band
+claude plugin install runner-band@claude-dino-band
 ```
 
-The CLI command loads the plugin for that session. Playing still requires a
-compatible desktop session that loads the plugin.
+These commands use the default user installation scope. Fresh-machine installation
+and desktop rendering remain unverified; the early-access UI requirements above
+still apply.
 
-## Play
+## Start, stop, and hide the game
 
-Run `/runner on`, then click **Start**. Run `/runner off` to hide the game.
-If another band mod is enabled, disable it using its own command. For the
-separate band mod used during development, that command was `/band off`.
+| Command | What happens |
+| --- | --- |
+| `/runner start` | Shows the band and starts a fresh game. Also restarts after game over. |
+| `/runner stop` | Ends the current run and resets its score. Keeps the best score and current band visibility. |
+| `/runner off` | Hides the band and pauses the current run. |
+| `/runner on` | Shows the band and resumes a hidden run, if one was running. Otherwise, click Start. |
+| `/runner` | Toggles band visibility. |
 
-Use the **Jump**, **Duck**, and **Start / Restart** buttons, or click the keyboard
-instruction line to focus it:
+You can also click **Start / Restart**, **Jump**, and **Duck** in the band.
+To use the keyboard, click the keyboard instruction line first:
 
 | Key | Action |
 | --- | --- |
-| Space, Up, W | Jump |
+| Space, Up, W | Jump; starts a fresh game when idle or after game over |
 | Down, S | Duck |
 | Enter, R | Start or restart |
 | Esc | Return keyboard focus to Claude |
@@ -56,6 +63,60 @@ instruction line to focus it:
 Avoid cacti and birds. Speed increases over time, and birds appear after score
 200. The game tracks a best score in plugin state and alternates day/night colors.
 The band updates every 100 ms.
+
+## Uninstall
+
+In Claude Code:
+
+```text
+/runner off
+```
+
+```text
+/plugin uninstall runner-band@claude-dino-band
+```
+
+Optionally remove this project's marketplace too:
+
+```text
+/plugin marketplace remove claude-dino-band
+```
+
+Restart the Claude session to unload its hooks. Terminal equivalents:
+
+```sh
+claude plugin uninstall runner-band@claude-dino-band
+claude plugin marketplace remove claude-dino-band
+```
+
+If you installed with `--scope project` or `--scope local`, pass the same scope
+to the terminal uninstall command. The CLI removes persistent plugin data by
+default; add `--keep-data` if you want to retain it.
+For a temporary `--plugin-dir` installation, end that session and launch again
+without the flag.
+
+## Troubleshooting
+
+- **Unknown `/runner` command:** restart the session and check `/plugin list`
+  for `runner-band@claude-dino-band`.
+- **No band or unsupported hook errors:** your Claude build may lack the
+  early-access function hooks or desktop UI API. A terminal cannot display the game.
+- **Keyboard controls do nothing:** click the instruction line to focus it,
+  or use the on-screen buttons. Press Esc to return focus.
+- **Another band is in the way:** disable that mod using its own command.
+  `/band off` applies only if you have a separate mod that provides `/band`.
+
+## Privacy
+
+The game code has no network requests, telemetry, credential handling, shell
+execution, or access to your conversations or files. It stores game state
+(including the best score) through Claude's plugin state API. The keyboard
+listener posts only game actions from its focused client to the plugin.
+Installing or updating the plugin uses Claude's normal GitHub marketplace flow.
+
+The published source and commit history were reviewed for credentials, personal
+email addresses, machine-specific paths, and local backups. The author name and
+GitHub profile are public credits; commits use a GitHub noreply address.
 
 ## Sprites
 
@@ -79,6 +140,16 @@ the engine can bottom-align them. Keep rendered SVG scenes under the desktop
 component's 131,072-character limit.
 
 ## Development
+
+```sh
+git clone https://github.com/jasonjias/claude-dino-band.git
+claude plugin validate ./claude-dino-band/.claude-plugin/plugin.json
+claude --plugin-dir ./claude-dino-band
+```
+
+The CLI loads the plugin for that session; playing still requires a compatible
+desktop surface. Engine-generated SDK types are excluded from the repository.
+
 
 - `hooks/register.tsx`: physics, collision detection, rendering, buttons, command.
 - `hooks/keys.tsx`: focused keyboard input.
