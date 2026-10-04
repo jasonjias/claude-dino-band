@@ -15,6 +15,6 @@ export type Game = {
 
 declare module 'claude-code' {
   interface PluginState {
-    'runner-band': { game: Game }
+    'dino-runner-band': { game: Game }
   }
 }

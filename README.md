@@ -1,9 +1,150 @@
-# Claude Dino Band
+# Dino Runner Band
 
-Play Chromium's T-Rex endless runner in the band above the prompt in Claude desktop.
+Play Chromium's T-Rex runner in Claude desktop, in the strip just above the prompt box.
+Type `/dino start` and jump over cacti while Claude works.
 Built by [Jason Chen (@jasonjias)](https://github.com/jasonjias).
 
 ![Dino, ducking frames, cacti, and birds](preview.png)
+
+| | |
+| --- | --- |
+| Plugin | `dino-runner-band` |
+| Marketplace (this repo) | `claude-dino-band` |
+| Command | `/dino` |
+| Works in | Claude desktop app, Code tab. Not the terminal. |
+
+## 1. Install
+
+In a terminal, run these two commands, one at a time:
+
+```sh
+claude plugin marketplace add jasonjias/claude-dino-band
+```
+
+```sh
+claude plugin install dino-runner-band@claude-dino-band
+```
+
+Or, inside a Claude Code session, type the same thing as slash commands:
+
+```text
+/plugin marketplace add jasonjias/claude-dino-band
+```
+
+```text
+/plugin install dino-runner-band@claude-dino-band
+```
+
+Then **open a new Claude desktop session**. A session that was already open
+does not pick up new plugins.
+
+Check it worked: type `/dino` in the prompt box. It should appear in the
+command list.
+
+## 2. Play
+
+```text
+/dino start
+```
+
+The game appears above the prompt box and starts running.
+
+**With the mouse:** click **Jump**, **Duck**, or **Start / Restart** under the game.
+
+**With the keyboard:** first click the gray line under the buttons
+("Click here, then: ..."). The game now has the keys:
+
+| Key | Does |
+| --- | --- |
+| Space, Up, W | Jump. Also starts a new game after game over. |
+| Down, S | Duck |
+| Enter, R | Start or restart |
+| Esc | Give the keys back to the prompt box, so you can type to Claude again |
+
+Avoid cacti and birds. The game speeds up over time, birds show up after
+score 200, and day turns to night every 700 points. Your best score is kept.
+
+## 3. Show, hide, and stop the band
+
+The game lives in a band above the prompt box. You control whether it shows:
+
+| You want to | Type | What happens |
+| --- | --- | --- |
+| Play or restart | `/dino start` | Shows the band and starts a fresh game |
+| **Hide it (minimize)** | `/dino off` | Band disappears, run is paused. Prompt area goes back to normal |
+| Show it again | `/dino on` | Band comes back. A paused run picks up where it left off |
+| Flip shown / hidden | `/dino` | Hides it if shown, shows it if hidden |
+| End the run, keep the band | `/dino stop` | Game resets to the start screen. Best score is kept |
+
+`off` keeps your run paused for later. `stop` ends the run but leaves the band
+on screen. Neither one uninstalls anything.
+
+## 4. Remove
+
+Just want it out of the way? `/dino off` hides it. To remove it completely:
+
+**Step 1.** In a terminal, run:
+
+```sh
+claude plugin uninstall dino-runner-band@claude-dino-band
+```
+
+**Step 2 (optional).** Remove this repo from your marketplace list too:
+
+```sh
+claude plugin marketplace remove claude-dino-band
+```
+
+Inside a Claude session the slash versions work too:
+`/plugin uninstall dino-runner-band@claude-dino-band` and
+`/plugin marketplace remove claude-dino-band`.
+
+**Step 3.** Close and reopen every open Claude session. A session keeps the
+plugin it loaded at startup, so the band can stay on screen until you do.
+
+**Check it is gone:**
+
+```sh
+claude plugin list
+```
+
+```sh
+claude plugin marketplace list
+```
+
+Neither should list `dino-runner-band` or `claude-dino-band`, and `/dino`
+should be an unknown command in a new session.
+
+If you installed with `--scope project` or `--scope local`, pass the same
+`--scope` to the uninstall command. Uninstall deletes the saved best score
+unless you add `--keep-data`. A leftover copy in
+`~/.claude/plugins/cache/claude-dino-band` is not loaded after uninstall;
+delete it if you like.
+
+To reinstall, repeat [Install](#1-install).
+
+## Update
+
+```sh
+claude plugin marketplace update claude-dino-band
+```
+
+```sh
+claude plugin update dino-runner-band@claude-dino-band
+```
+
+Then open a new session.
+
+## Troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| `/dino` is an unknown command | Open a new session. Then check `claude plugin list` shows `dino-runner-band@claude-dino-band` as enabled |
+| `/dino` does something else | Another plugin also uses `/dino`. Uninstall or disable it |
+| Nothing shows above the prompt | Use the Claude desktop app, not the terminal. Run `/dino on` in case it is hidden |
+| Keys do nothing | Click the gray instruction line first, or use the buttons |
+| Can't type to Claude | The game has the keys. Press Esc |
+| Unsupported hook errors | Your Claude build lacks the early-access UI API this plugin needs (see Requirements) |
 
 ## Requirements
 
@@ -11,134 +152,6 @@ This plugin uses Claude Code's **early-access function hooks and desktop UI API*
 including `AbovePrompt`, `Svg`, and `Client`. Your Claude build must support those
 APIs. The API declarations in the development environment were generated by
 Claude Code 2.1.286; compatibility with other builds is unverified.
-The game needs the desktop surface. A terminal session cannot display it.
-
-## Install
-
-In Claude Code, run these two commands **one at a time**:
-
-```text
-/plugin marketplace add jasonjias/claude-dino-band
-```
-
-```text
-/plugin install runner-band@claude-dino-band
-```
-
-Restart the Claude session, then run `/runner start` in a compatible Claude
-desktop session. No Python, Pillow, or sprite generation is needed to play.
-The plugin is named `runner-band`; its marketplace is `claude-dino-band`.
-
-If you prefer installing from a terminal:
-
-```sh
-claude plugin marketplace add jasonjias/claude-dino-band
-claude plugin install runner-band@claude-dino-band
-```
-
-These commands use the default user installation scope. Fresh-machine installation
-and desktop rendering remain unverified; the early-access UI requirements above
-still apply.
-
-## Start, stop, show, and hide
-
-The game lives in the **AbovePrompt band**: the strip directly above the prompt
-box in a Claude desktop session. Plugins can draw into it. `/runner` controls
-whether the game takes over that strip.
-
-| Command | What happens |
-| --- | --- |
-| `/runner start` | Shows the band and starts a fresh game. Also restarts after game over. |
-| `/runner stop` | Ends the current run and resets its score. Keeps the best score and current band visibility. |
-| `/runner on` | Shows the band. Resumes a hidden run, if one was running. Otherwise, click Start. |
-| `/runner off` | Hides the band and pauses the current run. The prompt area goes back to normal. |
-| `/runner` | Toggles between shown and hidden. |
-
-`/dino` is the same command under a shorter name: `/dino start`, `/dino off`, and so on.
-
-Stopping and hiding are different: `/runner stop` ends the game but leaves the
-band on screen; `/runner off` hides the band but keeps the run paused for later.
-
-You can also click **Start / Restart**, **Jump**, and **Duck** in the band.
-To use the keyboard, click the keyboard instruction line first:
-
-| Key | Action |
-| --- | --- |
-| Space, Up, W | Jump; starts a fresh game when idle or after game over |
-| Down, S | Duck |
-| Enter, R | Start or restart |
-| Esc | Return keyboard focus to Claude |
-
-Avoid cacti and birds. Speed increases over time, and birds appear after score
-200. The game tracks a best score in plugin state and alternates day/night colors.
-The band updates every 100 ms.
-
-## Uninstall
-
-To pause instead, `/runner off` hides the game without uninstalling anything.
-
-To remove it completely, run these in Claude Code **one at a time**:
-
-```text
-/runner off
-```
-
-```text
-/plugin uninstall runner-band@claude-dino-band
-```
-
-```text
-/plugin marketplace remove claude-dino-band
-```
-
-The last step is optional. It removes this repository from your marketplace
-list, so `/plugin install` no longer offers the game.
-
-Then **restart every open Claude session**. A running session keeps the hooks it
-loaded at startup, so the band can stay on screen until it restarts.
-
-Terminal equivalents:
-
-```sh
-claude plugin uninstall runner-band@claude-dino-band
-claude plugin marketplace remove claude-dino-band
-```
-
-If you installed with `--scope project` or `--scope local`, pass the same scope
-to the terminal uninstall command. The CLI removes persistent plugin data by
-default. Add `--keep-data` if you want to retain it.
-For a temporary `--plugin-dir` installation, end that session and launch again
-without the flag. Nothing was installed, so there is nothing else to remove.
-
-### Check that it is gone
-
-```sh
-claude plugin list
-claude plugin marketplace list
-```
-
-Neither list should show `runner-band` or `claude-dino-band`. After all sessions
-have restarted, `/runner` should be an unknown command.
-
-A downloaded copy can remain in `~/.claude/plugins/cache/claude-dino-band` while
-a session that loaded it is still open. Claude does not load it after uninstall.
-If it is still there after you restart, you can delete that folder.
-
-### Reinstall
-
-Run the two [Install](#install) commands again and restart the session.
-You can remove and reinstall as many times as you like.
-
-## Troubleshooting
-
-- **Unknown `/runner` command:** restart the session and check `/plugin list`
-  for `runner-band@claude-dino-band`.
-- **No band or unsupported hook errors:** your Claude build may lack the
-  early-access function hooks or desktop UI API. A terminal cannot display the game.
-- **Keyboard controls do nothing:** click the instruction line to focus it,
-  or use the on-screen buttons. Press Esc to return focus.
-- **Another band is in the way:** disable that mod using its own command.
-  `/band off` applies only if you have a separate mod that provides `/band`.
 
 ## Privacy
 
@@ -191,8 +204,9 @@ desktop surface. Engine-generated SDK types are excluded from the repository.
 - `types/index.d.ts`: game state and plugin state declaration.
 - `tools/`: original sprite sheet, crop coordinates, converter, attribution.
 
-The internal plugin name is `runner-band`; the repository is `claude-dino-band`.
-This preserves the original state namespace and `/runner` command.
+The plugin is named `dino-runner-band`; the repository and marketplace are
+`claude-dino-band`. Versions before 0.2.0 were called `runner-band`, with a
+`/runner` command.
 
 ## Validation and limitations
 
@@ -203,6 +217,6 @@ inset rectangles rather than Chromium's detailed collision boxes.
 
 ## License
 
-Runner code: [MIT](LICENSE). Chromium sprite artwork and derived vectors:
+Game code: [MIT](LICENSE). Chromium sprite artwork and derived vectors:
 [BSD 3-Clause](tools/CHROMIUM-LICENSE). See
 [third-party notices](THIRD_PARTY_NOTICES.md).

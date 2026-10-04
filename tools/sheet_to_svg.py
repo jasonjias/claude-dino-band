@@ -1,4 +1,4 @@
-"""Turn a PNG sprite sheet into vector sprites for runner-band.
+"""Turn a PNG sprite sheet into vector sprites for dino-runner-band.
 
 The desktop app will not draw a PNG embedded in an Svg, so each sprite becomes
 plain SVG paths: one run of same-colored pixels per row.

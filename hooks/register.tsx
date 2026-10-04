@@ -24,14 +24,11 @@ const H = 130
 const GROUND_Y = 108
 const PLAYER_X = 56
 
-// /dino and /runner are the same command; /runner is the original name.
-const COMMANDS = ['dino', 'runner'] as const
-
 const start: Game = {
   isOn: false, y: 0, vy: 0, ox: W, kind: 'cactus', tick: 0, best: 0,
   duck: 0, seed: CONFIG.seed, isOver: false, isRunning: false,
 }
-const game = atom({ plugin: 'runner-band', key: 'game' } as const, start)
+const game = atom({ plugin: 'dino-runner-band', key: 'game' } as const, start)
 const norm = (g: Game): Game => ({ ...start, ...g })
 
 const size = (name: SpriteName) => ({ w: SPRITES[name].w, h: SPRITES[name].h })
@@ -140,16 +137,14 @@ export const register: Register = on => {
         return g.isOn && g.isRunning && !g.isOver ? step(g) : g0
       }),
     )
-    for (const name of COMMANDS) {
-      await $.command.register({ name, description: 'Start, stop, show, or hide the dino game', argumentHint: '[start|stop|on|off]' })
-    }
+    await $.command.register({ name: 'dino', description: 'Start, stop, show, or hide the dino game', argumentHint: '[start|stop|on|off]' })
     return next(e)
   })
 
-  for (const command of COMMANDS) on('command.run', { command }, async ($, e) => {
+  on('command.run', { command: 'dino' }, async ($, e) => {
     const arg = e.args.trim().toLowerCase()
     if (!['', 'start', 'stop', 'on', 'off'].includes(arg)) {
-      return { text: `Use /${command} start, /${command} stop, /${command} on, or /${command} off.` }
+      return { text: 'Use /dino start, /dino stop, /dino on, or /dino off.' }
     }
     await update($, game, g0 => {
       const g = norm(g0)
@@ -159,8 +154,8 @@ export const register: Register = on => {
     })
     const g = norm(await read($, game))
     return { text: arg === 'start' ? 'Game started. Click the keyboard instruction line for keyboard controls.'
-      : arg === 'stop' ? `Game stopped. Run /${command} start to play again.`
-      : g.isOn ? `Runner shown. Run /${command} start to play.` : `Runner hidden and paused. Run /${command} on to show it again.` }
+      : arg === 'stop' ? 'Game stopped. Run /dino start to play again.'
+      : g.isOn ? 'Dino shown. Run /dino start to play.' : 'Dino hidden and paused. Run /dino on to show it again.' }
   })
 
   // Keys arrive from the Client in keys.tsx
@@ -179,7 +174,7 @@ export const register: Register = on => {
     if (e.surface !== 'desktop') {
       return (
         <Box flexDirection="column">
-          <Text>The runner needs the Claude desktop app.</Text>
+          <Text>Dino needs the Claude desktop app.</Text>
           {below}
         </Box>
       )

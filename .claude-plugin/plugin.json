@@ -1,6 +1,6 @@
 {
-  "name": "runner-band",
-  "version": "0.1.0",
+  "name": "dino-runner-band",
+  "version": "0.2.0",
   "description": "Chromium\u2019s T-Rex endless runner above the prompt in Claude desktop.",
   "author": {
     "name": "Jason Chen",
