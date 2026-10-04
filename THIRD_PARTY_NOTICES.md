@@ -1,7 +1,8 @@
 # Chromium sprite artwork
 
-`tools/chromium-dino.png`, the derived vector sprites in `hooks/sheet.ts`, and
-`preview.png` contain artwork from Chromium, Copyright The Chromium Authors.
+The sprite sheet [tools/chromium-dino.png](tools/chromium-dino.png), the pixel-art
+sprites derived from it in `hooks/sheet.ts`, and the screenshot
+[preview.png](preview.png) contain artwork from Chromium, Copyright The Chromium Authors.
 They are distributed under Chromium's BSD 3-Clause license, reproduced in
 [tools/CHROMIUM-LICENSE](tools/CHROMIUM-LICENSE).
 

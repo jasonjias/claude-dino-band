@@ -169,9 +169,9 @@ export const register: Register = on => {
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const g = norm(await read($, game))
     if (!g.isOn || e.props.hasSurvey) return next(e)
-    const { Box, Text, Button, Svg, Client } = $.ui.resolve(e) as any
     const below = await next(e)
     if (e.surface !== 'desktop') {
+      const { Box, Text } = $.ui.resolve(e)
       return (
         <Box flexDirection="column">
           <Text>Dino needs the Claude desktop app.</Text>
@@ -179,6 +179,8 @@ export const register: Register = on => {
         </Box>
       )
     }
+    const ui = $.ui.resolve(e)
+    const { Box, Button, Svg } = ui
     return (
       <Box flexDirection="column">
         <Svg source={scene(g)} alt={`Runner, score ${Math.floor(g.tick / 2)}`} width={600} />
@@ -187,7 +189,7 @@ export const register: Register = on => {
           <Button key="duck" label="Duck" onPress={() => update($, game, act('duck'))} />
           <Button key="start" label={g.isRunning ? 'Restart' : 'Start'} onPress={() => update($, game, act('start'))} />
         </Box>
-        <Client key="runner-keys" module="./keys.tsx" />
+        <ui.Client key="runner-keys" module="./keys.tsx" />
         {below}
       </Box>
     )
