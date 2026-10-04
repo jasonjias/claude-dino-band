@@ -1,0 +1,18 @@
+{
+  "name": "claude-dino-band",
+  "owner": {
+    "name": "Jason Chen",
+    "url": "https://github.com/jasonjias"
+  },
+  "plugins": [
+    {
+      "name": "runner-band",
+      "source": "./",
+      "description": "Chromium\u2019s T-Rex endless runner above the prompt in Claude desktop.",
+      "version": "0.1.0"
+    }
+  ],
+  "metadata": {
+    "description": "Chromium\u2019s T-Rex runner for Claude desktop prompt bands."
+  }
+}
