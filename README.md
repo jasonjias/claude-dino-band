@@ -40,15 +40,22 @@ These commands use the default user installation scope. Fresh-machine installati
 and desktop rendering remain unverified; the early-access UI requirements above
 still apply.
 
-## Start, stop, and hide the game
+## Start, stop, show, and hide
+
+The game lives in the **AbovePrompt band**: the strip directly above the prompt
+box in a Claude desktop session. Plugins can draw into it. `/runner` controls
+whether the game takes over that strip.
 
 | Command | What happens |
 | --- | --- |
 | `/runner start` | Shows the band and starts a fresh game. Also restarts after game over. |
 | `/runner stop` | Ends the current run and resets its score. Keeps the best score and current band visibility. |
-| `/runner off` | Hides the band and pauses the current run. |
-| `/runner on` | Shows the band and resumes a hidden run, if one was running. Otherwise, click Start. |
-| `/runner` | Toggles band visibility. |
+| `/runner on` | Shows the band. Resumes a hidden run, if one was running. Otherwise, click Start. |
+| `/runner off` | Hides the band and pauses the current run. The prompt area goes back to normal. |
+| `/runner` | Toggles between shown and hidden. |
+
+Stopping and hiding are different: `/runner stop` ends the game but leaves the
+band on screen; `/runner off` hides the band but keeps the run paused for later.
 
 You can also click **Start / Restart**, **Jump**, and **Duck** in the band.
 To use the keyboard, click the keyboard instruction line first:
@@ -66,7 +73,9 @@ The band updates every 100 ms.
 
 ## Uninstall
 
-In Claude Code:
+To pause instead, `/runner off` hides the game without uninstalling anything.
+
+To remove it completely, run these in Claude Code **one at a time**:
 
 ```text
 /runner off
@@ -76,13 +85,17 @@ In Claude Code:
 /plugin uninstall runner-band@claude-dino-band
 ```
 
-Optionally remove this project's marketplace too:
-
 ```text
 /plugin marketplace remove claude-dino-band
 ```
 
-Restart the Claude session to unload its hooks. Terminal equivalents:
+The last step is optional. It removes this repository from your marketplace
+list, so `/plugin install` no longer offers the game.
+
+Then **restart every open Claude session**. A running session keeps the hooks it
+loaded at startup, so the band can stay on screen until it restarts.
+
+Terminal equivalents:
 
 ```sh
 claude plugin uninstall runner-band@claude-dino-band
@@ -91,9 +104,28 @@ claude plugin marketplace remove claude-dino-band
 
 If you installed with `--scope project` or `--scope local`, pass the same scope
 to the terminal uninstall command. The CLI removes persistent plugin data by
-default; add `--keep-data` if you want to retain it.
+default. Add `--keep-data` if you want to retain it.
 For a temporary `--plugin-dir` installation, end that session and launch again
-without the flag.
+without the flag. Nothing was installed, so there is nothing else to remove.
+
+### Check that it is gone
+
+```sh
+claude plugin list
+claude plugin marketplace list
+```
+
+Neither list should show `runner-band` or `claude-dino-band`. After all sessions
+have restarted, `/runner` should be an unknown command.
+
+A downloaded copy can remain in `~/.claude/plugins/cache/claude-dino-band` while
+a session that loaded it is still open. Claude does not load it after uninstall.
+If it is still there after you restart, you can delete that folder.
+
+### Reinstall
+
+Run the two [Install](#install) commands again and restart the session.
+You can remove and reinstall as many times as you like.
 
 ## Troubleshooting
 
