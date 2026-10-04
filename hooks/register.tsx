@@ -88,9 +88,9 @@ const step = (g: Game): Game => {
 
 // One sprite: its vector paths, placed in the scene
 const sprite = (name: SpriteName, x: number, bottom: number) => {
-  const { h, paths } = SPRITES[name]
+  const { h: height, paths } = SPRITES[name]
   return (
-    `<g transform="translate(${Math.round(x)} ${Math.round(GROUND_Y - bottom - h)})">` +
+    `<g transform="translate(${Math.round(x)} ${Math.round(GROUND_Y - bottom - height)})">` +
     paths.map(p => `<path fill="${p.fill}" d="${p.d}"/>`).join('') +
     `</g>`
   )
