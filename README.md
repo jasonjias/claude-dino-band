@@ -54,6 +54,8 @@ whether the game takes over that strip.
 | `/runner off` | Hides the band and pauses the current run. The prompt area goes back to normal. |
 | `/runner` | Toggles between shown and hidden. |
 
+`/dino` is the same command under a shorter name: `/dino start`, `/dino off`, and so on.
+
 Stopping and hiding are different: `/runner stop` ends the game but leaves the
 band on screen; `/runner off` hides the band but keeps the run paused for later.
 

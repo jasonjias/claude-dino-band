@@ -24,6 +24,9 @@ const H = 130
 const GROUND_Y = 108
 const PLAYER_X = 56
 
+// /dino and /runner are the same command; /runner is the original name.
+const COMMANDS = ['dino', 'runner'] as const
+
 const start: Game = {
   isOn: false, y: 0, vy: 0, ox: W, kind: 'cactus', tick: 0, best: 0,
   duck: 0, seed: CONFIG.seed, isOver: false, isRunning: false,
@@ -137,14 +140,16 @@ export const register: Register = on => {
         return g.isOn && g.isRunning && !g.isOver ? step(g) : g0
       }),
     )
-    await $.command.register({ name: 'runner', description: 'Start, stop, show, or hide the dino game', argumentHint: '[start|stop|on|off]' })
+    for (const name of COMMANDS) {
+      await $.command.register({ name, description: 'Start, stop, show, or hide the dino game', argumentHint: '[start|stop|on|off]' })
+    }
     return next(e)
   })
 
-  on('command.run', { command: 'runner' }, async ($, e) => {
+  for (const command of COMMANDS) on('command.run', { command }, async ($, e) => {
     const arg = e.args.trim().toLowerCase()
     if (!['', 'start', 'stop', 'on', 'off'].includes(arg)) {
-      return { text: 'Use /runner start, /runner stop, /runner on, or /runner off.' }
+      return { text: `Use /${command} start, /${command} stop, /${command} on, or /${command} off.` }
     }
     await update($, game, g0 => {
       const g = norm(g0)
@@ -154,8 +159,8 @@ export const register: Register = on => {
     })
     const g = norm(await read($, game))
     return { text: arg === 'start' ? 'Game started. Click the keyboard instruction line for keyboard controls.'
-      : arg === 'stop' ? 'Game stopped. Run /runner start to play again.'
-      : g.isOn ? 'Runner shown. Run /runner start to play.' : 'Runner hidden and paused. Run /runner on to show it again.' }
+      : arg === 'stop' ? `Game stopped. Run /${command} start to play again.`
+      : g.isOn ? `Runner shown. Run /${command} start to play.` : `Runner hidden and paused. Run /${command} on to show it again.` }
   })
 
   // Keys arrive from the Client in keys.tsx
